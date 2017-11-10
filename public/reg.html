@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+    <script src="./javascripts/jquery/jquery.min.js"></script>
+    <!-- <script src="./javascripts/style.js" defer></script> -->
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+        * {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        body {
+            width: 100%;
+            background: url('./images/theme/white.jpg');
+            position: relative;
+        }
+
+        article.content {
+            width: 500px;
+            height: 500px;
+            border: 1px solid #ccc;
+            background-color: rgba(0, 0, 0, 0.5);
+            margin: 20px auto 0;
+            text-align: center;
+            /* position: relative;  */
+            /* top: 0;bottom: 0;left: 0;right: 0;
+         margin: auto auto;  */
+        }
+
+        article.content .head {
+            height: 50px;
+            width: 100%;
+            line-height: 50px;
+            /* background-color: red;  */
+            margin-top: -10px;
+        }
+
+        #hr {
+            margin-top: 0;
+        }
+
+        article.content .main {
+            font-size: 20px;
+            text-align: center;
+            /* background-color: deeppink; */
+            margin-top: 50px;
+        }
+
+        label {
+            display: block;
+            margin: 20px;
+            cursor: text;
+        }
+
+        label span {
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        /*localStorge本地存儲
+        1/判斷用户名或密码是否为空 都不为空返回true
+        2、根据判断不为空 执行
+            声明一个arr数组 用于放置登录信息
+            （2）已被注册
+                判断localStorge是否已存在 存在则提示已被注册
+            （1）未被注册
+                
+                arr数组由对象组成{loginName：loginPsw}
+                赋值给localStorge进行本地存储
+    */
+
+        $(function () {//1 获取数据库注册数据 
+            var Arr = [];//存放数据库注册表的数据
+            var arr = [];
+            $.getJSON('exam/findReg', function (data) {//获取后台数据
+                // console.log(data);//数组返回 打印后台数据
+                arr = data;
+                // console.log(arr);
+                data.forEach(function (item) {
+                    // console.log(item);//Object { id: 1, name: "wys", psw: "wyswys" }
+                    var obj = item;
+                    Arr.push(obj)
+                });
+            });
+
+
+            var pattern1 = /^[a-zA-Z]\w{1,9}$/;//以字母开头，长度在2~8之间，只能包含字符、数字和下划线。
+            var pattern2 = /^[a-zA-Z]\w{5,17}$/;
+            var inputs = document.getElementsByTagName("input");
+            var arr = Array.prototype.slice.call(inputs, 0);
+            var zc = document.getElementsByClassName("zhuce")[0];
+            console.log(zc);
+            zc.onclick = function () {
+                // alert();
+                // var arr1=[];
+
+                if (noKong()) {//5 用户名 密码不为空
+
+                    // if(Arr){// 6当数据库有数据时存在时 提示已被注册                                    
+                    // arr=eval(localStorage.users);
+                    for (e in Arr) {//遍历json获取数据库的注册用户名name 存在时提示已被注册，不能注册
+                        if ($("#loginName").val() == Arr[e].name) {
+                            alert("已被注册");
+                            clear();
+                            return;
+                        }
+                    }
+                    // }
+                    // 当数据库数据的name与当前要注册的用户名不相同时 进行成功注册 并吧当前数据插入数据库 
+                    var users = { 'name': $("#loginName").val(), 'psw': $("#loginPsw").val() };
+                    var obj = JSON.stringify(users);
+                    // console.log(obj);//{"name":"qaz","psw":"qazqaz"}
+                    alert("注册成功");
+                    clear();
+                    window.open('login.html');
+                    // 7 把当前注的数据插入数据库
+                    $.ajax({
+                        type: "POST",
+                        url: "exam/addUser",
+                        data: obj,
+                        contentType: "application/json",//http协议
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    });
+
+
+                }
+            }
+            function clear() {//把input框清理为空 便于每次都清空输入框的数据
+                $("#loginName").val('');
+                $("#loginPsw").val('');
+                $("#againPsw").val('');
+            }
+            function noKong() {//4判断用户 1 2 3 所有的都正确 返回true
+                if (lgName() && lgPsw() & againPsw()) {
+                    return true;
+                }
+                return false;
+            }
+            //1 验证用户名cons
+            var lgName = function user() {
+                // alert();
+                inputs[0].style.borderColor = '';
+                if (pattern1.test($("#loginName").val())) {
+                    inputs[0].style.border = '2px solid green';
+                    return true;
+                }
+                else {
+                    inputs[0].style.borderColor = 'red';
+                    return false;
+                }
+            };
+            $("#loginName").on("blur", lgName)
+
+            //2 验证密码
+            var lgPsw = function Psw() {
+                if (pattern2.test($("#loginPsw").val())) {
+                    inputs[1].style.border = '2px solid green';
+                    return true;
+                }
+                else {
+                    inputs[1].style.borderColor = 'red';
+                    return false;
+                }
+            }
+            $("#loginPsw").on("blur", lgPsw)
+            // 3确认密码
+            var againPsw = function againPsw() {
+                if ($("#againPsw").val() == $("#loginPsw").val()) {
+                    inputs[2].style.border = '2px solid green';
+                    return true;
+                }
+                else {
+                    inputs[2].style.borderColor = 'red';
+                    return false;
+                }
+            }
+            $("#againPsw").on("blur", againPsw);
+
+
+        });
+
+
+
+          /*
+            console.log(localStorage.users);//[{"loginName":"gzx","loginPsw":"gzxqwe"},{"loginName":"qwe","loginPsw":"qweqwe"}]
+            var a=[];
+            a=eval(localStorage.users);//[boject ,object]==>Arr
+            console.log(a[0])//Object { loginName: "gzx", loginPsw: "gzxqwe" }
+        */
+    </script>
+
+
+
+
+</head>
+
+<body>
+    <article class="content">
+        <section class="head">
+            <h1>注册</h1>
+        </section>
+        <hr id="hr">
+        <section class="main">
+            <!-- <form  method="post" target="_blank"> -->
+            <label for="loginName">
+                    <span>用户名</span><input type="text" class="btn btn-lg" id="loginName">
+                </label>
+            <label for="loginPsw"> 
+                    <span>密码：</span><input type="password" class="btn btn-lg" id="loginPsw">
+                </label>
+            <label for="againPsw"> 
+                    <span>确认密码</span><input type="password" class="btn btn-lg" id="againPsw">
+                </label>
+            <button class="btn btn-lg btn-primary zhuce">注册</button>
+            <!-- </form> -->
+        </section>
+    </article>
+
+</body>
+
+</html>

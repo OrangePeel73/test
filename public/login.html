@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>login</title>
+    <script src="./javascripts/jquery/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+</head>
+<style>
+    *{margin: 0 auto;padding: 0;}
+    body{
+        width: 100%;
+        background: url('./images/theme/white.jpg') ;
+        position: relative;
+    }
+    article.content{
+        width: 500px;
+        height: 500px;
+        border: 1px solid #ccc;
+        background-color: rgba(0, 0, 0,0.5);
+         margin:20px auto 0; 
+        text-align: center;
+        }
+     article.content .head{
+         height: 50px;
+         width: 100%;
+         line-height: 50px;
+           margin-top: -10px; 
+     }   
+     #hr{margin-top: 0;}
+     article.content .lgmain{
+         font-size: 20px;
+         text-align: center;
+         margin-top: 50px;
+        }
+     label{
+         display: block; 
+         margin: 20px;
+     }
+  
+     label span{
+         display: inline-block;
+         width: 100px;
+     }
+</style>
+<script>
+    $(function(){
+           var Arr=[];//存放数据库注册表的数据
+           var arr=[];
+            $.getJSON('exam/findReg',function(data){//获取后台数据
+                // console.log(data);//数组返回 打印后台数据
+                arr=data;
+                console.log(arr);
+               data.forEach(function(item) {
+                    // console.log(item);//Object { id: 1, name: "wys", psw: "wyswys" }
+                    var obj=item;
+                   Arr.push(obj)
+                });
+             });
+        
+
+        // 登录
+        var form=document.getElementsByTagName("form")[0];
+        var login=document.getElementsByClassName("login")[0];
+       var inputs=document.getElementsByTagName("input");
+        login.onclick=function(){
+            
+            //  console.log(Arr);
+            if(noKong()){//用户名 密码不为空
+                if(Arr){//localStorge存在时
+                    // arr=eval(localStorage.users);
+                    var k=0;
+                    for( e in Arr){//便利数据库中的注册信息
+                        if($("#loginName").val()==Arr[e].name){
+                            if($("#loginPsw").val()==Arr[e].psw){
+                                if($("#againPsw").val()==Arr[e].psw){
+                                    clear();
+                                    k=0;
+                                    // form.submit();//表单提交
+                                    window.open("index.html");
+                                    
+                                return;
+                               }
+                               else{alert("密码不一致，请重新输入");}
+                            }
+                            else{
+                                alert("密码错误");
+                                clear();
+                                k=0;
+                                return;
+                            }
+                        }
+                        else{
+                            k=1;
+                        }
+                    }
+                    if(k==1){
+                        alert("用户不存在");
+                        clear();
+                    }
+                }
+                else{
+                    alert("用户不存在");  
+                    clear();  
+                }
+            }
+        }
+
+        function clear(){
+            $("#loginName").val('');
+            $("#loginPsw").val('');
+            $("#againPsw").val('');
+        }
+        function noKong(){//判断用户 密码不为空
+            if($("#loginName").val()==""){
+                inputs[0].style.borderColor='red';
+                // alert("用户名不能为空");
+                return false;
+            }
+            else if($("#loginPsw").val()==""){
+                // alert("密码不能为空");
+                inputs[1].style.borderColor='red';
+                return false;
+            }
+            else if($("#againPsw").val()!=$("#loginPsw").val()){
+                // alert("密码不能为空");
+                inputs[2].style.borderColor='red';
+                return false;
+            }
+
+            return true;
+        }
+        // 跳转注册界面
+        var zcBtn=document.getElementsByClassName("zc")[0];
+        zcBtn.onclick=function(){
+            // window.location.href='reg.html';//在当前窗口打开串钩窗口
+            window.open("reg.html"); //在新窗口打开
+       }
+    });
+</script>
+
+ <body> 
+    <article class="content">
+        <section class="head">
+            <h1>登录</h1>
+        </section>
+        <hr id="hr">
+        <section class="lgmain">
+             <form  method="post" target="_blank" action="./index.html"> 
+                <label for="loginName">
+                    <span>用户名</span><input type="text" class="btn btn-lg" id="loginName">
+                </label>
+                <label for="loginPsw"> 
+                    <span>密码：</span><input type="password" class="btn btn-lg" id="loginPsw">
+                </label>  
+               <label for="againPsw"> 
+                    <span>确认密码</span><input type="password" class="btn btn-lg" id="againPsw">
+                </label> 
+             </form> 
+             <button class=" btn btn-lg btn-primary login" >登录</button>
+             <button class="btn btn-lg btn-primary zc" >注册</button>
+        </section>
+    </article>
+    
+</body>
+</html>

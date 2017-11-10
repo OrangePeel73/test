@@ -1,0 +1,32 @@
+body{position: relative}
+article.lgcontent{
+        width: 500px;
+        text-align: center;
+        display: none;
+         position: absolute;
+         top: 0;bottom: 0;left: 0;right: 0;
+         margin: auto;
+         z-index: 1;
+        }
+     article.lgcontent .lghead{
+         width: 100%;
+        margin-top: -10px; 
+     }   
+     article.lgcontent .lgmain{
+         font-size: 20px;
+         text-align: center;
+        }
+    .lgmain input{border: 1px solid #ccc;}
+     label.lg{
+         display: block; 
+         margin: 20px;
+     }
+  
+     label.lg span{
+         display: inline-block;
+         width: 100px;
+     } 
+    section.modal-footer{
+        /* margin-left: 10px; */
+        text-align: center;
+    }

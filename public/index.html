@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>考试作业系统</title>
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="./stylesheets/login.css">
+    <script src="./javascripts/jquery/jquery.min.js"></script>
+    <script src="./javascripts/style.js" defer></script>
+    <!-- <script src="./javascripts/tbl.js" ></script> -->
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <style>
+     
+</style>
+</head>
+<body>
+    <!--login 页面  -->
+    <article class="lgcontent model fade" id="myModal">
+        <div class="modal-content">
+
+            <section class="lghead modal-header">
+                <h1>登录</h1>
+            </section>
+            <section class="lgmain modal-body">
+                <form  method="post" target="_blank" action="./index.html"> 
+                    <label for="loginName" class="lg">
+                        <span>用户名</span><input type="text" class="btn btn-lg" id="loginName">
+                    </label>
+                    <label for="loginPsw"  class="lg"> 
+                        <span>密码：</span><input type="password" class="btn btn-lg" id="loginPsw">
+                    </label>  
+                <label for="againPsw" class="lg"> 
+                        <span>确认密码</span><input type="password" class="btn btn-lg" id="againPsw">
+                    </label> 
+                </form> 
+            </section>
+
+            <section class="modal-footer">
+                <button class=" btn btn-lg btn-primary login" >登录</button>
+                <!-- <button class="btn btn-lg btn-primary zc" >注册</button> -->
+            </section>
+        </div>
+    </article>
+<!--login  -->
+<!--注册页面  -->
+    <article class="lgcontent model fade" id="regModal">
+        <div class="modal-content">
+
+            <section class="lghead modal-header">
+                <h1>注册</h1>
+            </section>
+            <section class="lgmain modal-body">
+                <form  method="post" target="_blank" action="./index.html"> 
+                    <label for="regName" class="lg">
+                        <span>用户名</span><input type="text" class="btn btn-lg regInput" id="regName">
+                    </label>
+                    <label for="regPsw"  class="lg"> 
+                        <span>密码：</span><input type="password" class="btn btn-lg regInput" id="regPsw">
+                    </label> 
+                    
+                    <label for="regaPsw" class="lg"> 
+                        <span>确认密码</span><input type="password" class="btn btn-lg regInput" id="regaPsw">
+                    </label> 
+                    
+                </form> 
+            </section>
+
+            <section class="modal-footer">
+                <!-- <button class=" btn btn-lg btn-primary login" >登录</button> -->
+                 <button class="btn btn-lg btn-primary zc" >注册</button> 
+            </section>
+        </div>
+    </article>
+
+
+
+
+    <article class="content">
+            <header class="header">
+                <div class="logo">
+                    <img src="./images/theme/tk_logo.png">
+                </div>
+                <div class="sign">
+                    <span id="tap">
+                        <span id="welcome"> 你好， 管理员</span>
+                        <a href="" id="exit"> 退出</a>
+                    </span>
+
+                     <button class="btn btn-info " data-toggle="modal" href="#myModal"  id="login">登录</button> 
+                     <button class="btn btn-info" data-toggle="modal" href="#regModal" id="reg">注册</button> 
+                    
+                </div>  
+                <div class="about">
+                    <ul>
+                        <li class="desk"> 桌面</li>
+                        <li class="skin"> 换肤</li>
+                        <li class="us">关于</li>
+                </div>
+            </header>
+
+            <article class="main">
+                <section class="navleft">
+                    <ul class="navul">
+                        <li class="navli">
+                            <a href="javascript:;">
+                                <img src="./images/icon/icon_basic.png" >
+                                <span> 题库</span>
+                            </a>
+                            <ul class="ulinul default">
+                                <li page="papes/bank/all.html">
+                                    <a href="#"> 全部题目</a>
+                                <li page="papes/bank/topic.html"> 
+                                    <a href="#">  题目管理</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="navli">
+                            <a href="javascript:;">
+                                <img src="./images/icon/icon_personnel.png">
+                                <span> 试题管理</span>
+                            </a>
+                            <ul class="ulinul">
+                                <li page="papes/paper/paperList.html">
+                                    <a href="#"> 试卷列表</a>
+                                </li>
+                                <li page="papes/paper/paperHand.html"> 
+                                    <a href="#"> 手工组卷</a>
+                                </li>
+                            </ul>
+                        </li>    
+                        <li class="navli"> 
+                            <a href="javascript:;">
+                                <img src="./images/icon/icon_educational.png">
+                                <span> 考试管理</span>
+                            </a>
+                            <ul class="ulinul">
+                                <li page="papes/test/testList.html">  
+                                    <a href="#"> 考试列表</a>
+                                </li>
+                                <li page="papes/test/testArrangement.html">  
+                                    <a href="#"> 考试安排</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+                <section class="contentright"></section>
+                
+            </article>
+    </article>   
+</body>
+</html>

@@ -1,0 +1,214 @@
+<style>
+    /*  */
+
+    div#tblUl {
+        /* width: 800px; */
+        background-color: darkgoldenrod;
+        font-size: 20px;
+        text-align: center;
+          /* overflow: hidden;   */
+        color: #fff;
+    }
+
+    div#tblUl ul {
+          /* overflow: hidden;   */
+        width: 800px;
+        height: 40px;
+        background-color: darkolivegreen;
+    }
+
+    div#tblUl ul+ul {
+        margin-top: 10px;
+    }
+
+    div#tblUl ul li {
+        list-style: none;
+        float: left;
+        display: inline-block;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+        position: relative;
+        /* border: 1px solid #ccc;   */
+    }
+    /* div#tblUl ul li:hover{
+        background-color: rgba(0, 0, 0,  0.5);
+        color: #fff;
+    } */
+
+    div#tblUl ul li .liBg {
+        width: 100px;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 40px;
+        left: 0;
+    }
+    /*清除浮动  */
+
+    .clearfix {}
+
+    .clearfix::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+</style>
+<h2 id="h">
+    题目管理</h2>
+<hr>
+
+<div id="tblUl">
+    <ul class="typeLi">
+        <li class="title">题型</li>
+        <li>全部</li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <ul class="partLi">
+        <li class="title">方向</li>
+        <li>全部</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <ul class="topicLi">
+        <li class="title">知识点</li>
+        <li>全部</li>
+        <li></li>
+        <li><div class="liBg"></div></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+
+<script>
+    $(function () {
+        var arrType = [];//题型
+        var arrPart = [];//方向
+        var arrTopic = [];//方向下的知识点
+        arrAll = [];
+        var bgLi=$("#tblUl ul li").not(".title");
+        var newLi=$('<div class="liBg">'+'</div>');
+        // 获取题型的数据        
+        $.getJSON('tbl/findType', function (data) {//获取后台数据
+            // console.log(data);//数组返回 打印后台数据
+            data.forEach(function (item) {
+                arrType.push(item.realName);
+            });
+            Array.prototype.slice.call($(".typeLi li"), 2).forEach(function (e, index) {
+                $(e).html(arrType[index]);
+            });
+            $(".typeLi li").not('.title').append(newLi);
+            
+        });
+        // 获取方向的数据
+        $.getJSON('tbl/findPart', function (data) {//获取后台数据
+            // console.log(data);//数组返回 打印后台数据
+            data.forEach(function (item) {
+                arrPart.push(item.name);
+            });
+            Array.prototype.slice.call($(".partLi li"), 2).forEach(function (e, index) {
+                $(e).html(arrPart[index]);
+            });
+            $(".partLi li").not('.title').append(newLi);
+        });
+        // 获取知识点的数据
+        $.getJSON('tbl/findTopic', function (data) {//获取后台数据
+            // console.log(data);//数组返回 打印后台数据
+            data.forEach(function (item) {
+                arrTopic.push(item.title);
+            });
+            Array.prototype.slice.call($(".topicLi li"), 2).forEach(function (e, index) {
+                $(e).text(arrTopic[index]);
+            });
+            $(".topicLi li").not('.title').append(newLi);
+        });
+        // 鼠标跟随动画
+        console.log($("#tblUl ul li"));    
+        $("#tblUl ul li").not(".title").hover(function (ev) {
+            // $("#tblUl ul li").append(newLi);
+            // alert();
+            //鼠标移上去的效果
+            //    animate({需改变的属性：改变的值}，多长时间之内执行)
+            // stop()停止上一次东湖，执行下一次，未加之前 有小bug：鼠标快速移开后还会执行动画
+            //    $(this).find(".text").stop().animate({top:0},500);//鼠标移上去的当前li
+            /*测试鼠标位置
+                  var x=e.pageX,//鼠标的x坐标 pageX页面上的位置
+                 y=e.pageY;
+                 console.log(x,y);*/
+
+            // 获取鼠标位置，比较鼠标位置到li上下左右边缘的距离来判断text从了哪里进入
+        //     move.call(this, ev, true);//移进为true
+
+        // }, function (ev) {//false为移出
+        //     // $(this).find(".text").stop().animate({top:"115px"},500);
+        //     move.call(this, ev, false);//移出为false
+        });
+
+        // function move(e, bool) {
+        //     var top = $(this).offset().top,//获取li距离浏览器上端的距离
+        //         bottom = $(this).height() + top,
+        //         left = $(this).offset().left,
+        //         right = left + $(this).width();
+
+        //     var x = e.pageX,//获取鼠标页面上的距离
+        //         y = e.pageY;
+
+        //     var sT = Math.abs(y - top),//获取鼠标位置距离li边缘的距离
+        //         sB = Math.abs(y - bottom),
+        //         sL = Math.abs(x - left),
+        //         sR = Math.abs(x - right);
+        //     // 找到上面四个值得最小的值
+        //     var min = Math.min(sT, sB, sL, sR);
+        //     // console.log(min);
+        //     // 判断最小的值，从最小的位置出来
+        //     switch (min) {
+        //         case sT://从上面出来
+        //             if (bool) {//如果bool为true，鼠标移进
+        //                 $(this).find(".liBg").css({ left: 0, top: "-40px" }).stop().animate({ top: 0 }, 200);
+        //             }
+        //             else {//bool为false,鼠标移出
+        //                 $(this).find(".liBg").stop().animate({ top: "-40px" }, 200);
+        //             }
+        //             break;
+
+        //         case sB://从下面出来
+        //             if (bool) {//如果bool为true，鼠标移进
+        //                 $(this).find(".liBg").css({ left: 0, top: "40px" }).stop().animate({ top: 0 }, 200);
+        //             }
+        //             else {//鼠标移出
+        //                 $(this).find(".liBg").stop().animate({ top: "40px" }, 200);
+        //             }
+        //             break;
+        //         case sL://从左边出来
+        //             if (bool) {//如果bool为true，鼠标移进
+        //                 $(this).find(".liBg").css({ left: "-100px", top: 0 }).stop().animate({ left: 0 }, 200);
+        //             }
+        //             else {//鼠标移出
+        //                 $(this).find(".liBg").stop().animate({ left: "-100px" }, 200);
+        //             }
+        //             break;
+        //         case sR://从右边出来
+        //             if (bool) {//如果bool为true，鼠标移进
+        //                 $(this).find(".liBg").css({ left: "100px", top: 0 }).stop().animate({ left: 0 }, 200);
+        //             }
+        //             else {//鼠标移出
+        //                 $(this).find(".liBg").stop().animate({ left: "100px" }, 200);
+        //             }
+        //             break;
+            // }
+
+        // }
+
+    })
+
+</script>

@@ -1,0 +1,90 @@
+一、在后台中挂起静态页面index.html
+
+    1》在public文件下的index.html
+        完成html页面信息
+
+    2》后天启动服务 npm run start
+
+    3》在路由文件夹router下创建一个js文件，用于设置路由的
+        如文件名rgRouter.js
+        1>引入路由模块
+            var regRouter=express.Router（）；
+
+        2>设置路由
+            studentsRouter.post('/index',function(req,resp){
+                var body = req.body;
+                resp.send(body);
+            }) 
+二、吧后台数据传到前台页面
+
+   1》 创建一个db文件夹 用于存放各个数据库的增删改查方法
+    
+        1>在db下创建连接池的js文件用于链接数据库  pool.js
+            var mysql = require('mysql');
+            //创建pool，保证一个项目中只有一个pool
+            var pool = global.pool;
+            if(!pool){
+                //如果pool不存在，创建pool
+                pool = mysql.createPool({
+                    host:'127.0.0.1',
+                    port:'3306',
+                    database:'exam',
+                    user:'root',
+                    password:'root'        
+                });
+                global.pool = pool;
+            }
+           module.exports = pool;
+    
+        2>在db下创建数据库表的增删改查方法
+            如查询获取数据库reg表的所有数据
+            var pool = require('./pool');
+            function findAll(handler){
+                pool.getConnection(function(err,conn){
+                    if(err){
+                        throw err;
+                    } else {
+                        var sql = "select * from reg";
+                        conn.query(sql,function(err,results){
+                            if(err){
+                                throw err;
+                            } else {
+                                handler.call(this,results);
+                            }
+                            //释放连接对象
+                            conn.release();
+                        });
+                    }
+                });
+            }
+            module.exports = {
+                findAll:findAll
+            }
+
+    2》在路由文件夹routers下创建一个路由文件 如regRouter.js文件
+        用于设置路由，连接db中的方法获取数据库数据传到页面中
+        1>引入express模块 db中增删改查的js文件  路由模块
+            var express = require('express');
+            var regDB = require('../db/regDB');
+            var regRouter = express.Router();
+
+        2>设置路由 和数据显示的静态页面的url
+           regRouter.get('/findReg',function(req,resp){
+                var body = req.body;
+                regDB.findAll(function(results){//db中的方法
+                    resp.send(JSON.stringify(results));
+                });
+            })
+            module.exports = regRouter;
+
+    3》在app.js中
+        1>引入路由文件regRouter.js
+            var regRouter = require('./routes/regRouter');
+
+        2>设置托管静态页面目录exam 用于放置后台穿的数据的响应
+            app.use('/exam',regRouter);
+
+    4》启动后台服务 npm run start 
+
+    5》在浏览器中访问localhost:3000/exam/findReg 即可看到一个页面 显示数据库的数据
+            

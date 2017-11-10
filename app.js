@@ -7,7 +7,9 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var studentsRouter = require('./routes/studentsRouter');
+// 1 引入路由的student操作模块
+var regRouter = require('./routes/regRouter');
+var tblRouter=require('./routes/tblRouter');
 
 var app = express();
 
@@ -25,7 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/students',studentsRouter);
+//2 托管静态文件目录  设置静态托管文件为students 放置操作响应的跳转页面 localhost:3000/students.html
+app.use('/exam',regRouter);
+app.use('/tbl',tblRouter);
+
+// app.use('/login', login);
+// app.use('/reg', reg);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
